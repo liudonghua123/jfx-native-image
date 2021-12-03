@@ -17,10 +17,10 @@ jobs:
     steps:
       - name: 'Checkout'
         uses: actions/checkout@v2
-      - name: 'Setup Java 17'
+      - name: 'Setup Java 11'
         uses: actions/setup-java@v1
         with:
-          java-version: 17
+          java-version: 11
       - name: 'Build JAR'
         run: |
           mvn clean package
@@ -78,10 +78,10 @@ jobs:
           echo "PROJECT_VERSION: $PROJECT_VERSION"
           echo ::set-output name=PROJECT_VERSION::$PROJECT_VERSION
         shell: bash
-      - name: 'Setup Java 17'
+      - name: 'Setup Java 11'
         uses: actions/setup-java@v1
         with:
-          java-version: 17
+          java-version: 11
       - name: Build platform-specific jar
         run: |
           # overwrite pom.xml
@@ -99,7 +99,7 @@ jobs:
       - name: 'Setup GraalVM Environment'
         uses: ayltai/setup-graalvm@v1
         with:
-          java-version: 17
+          java-version: 11
           graalvm-version: 21.3.0
           native-image: true
       - name: check java version
@@ -110,7 +110,7 @@ jobs:
           mkdir build
           cd build
           echo "build native image..."
-          native-image -jar ../${{env.APP_NAME}}.jar
+          native-image -jar ../${{env.APP_NAME}}.jar --no-fallback -H:Name=${{env.APP_NAME}} -H:ReflectionConfigurationFiles=../resources/reflectconfig -H:JNIConfigurationFiles=../resources/jniconfig.json -H:ResourceConfigurationFiles=../resources/resourceconfig.json --allow-incomplete-classpath --verbose -H:IncludeResourceBundles=com/sun/javafx/scene/control/skin/resources/controls,com/sun/javafx/scene/control/skin/resources/controls-nt,com.sun.javafx.tk.quantum.QuantumMessagesBundle,com/sun/glass/ui/win/themes
           echo "build native image finished"
       - name: 'Build Native Image on windows'
         if: matrix.os == 'windows-latest'
@@ -120,7 +120,7 @@ jobs:
           echo "build native image..."
           mkdir build
           cd build
-          native-image -jar ../${{env.APP_NAME}}.jar
+          native-image -jar ../${{env.APP_NAME}}.jar --no-fallback -H:Name=${{env.APP_NAME}} -H:ReflectionConfigurationFiles=../resources/reflectconfig -H:JNIConfigurationFiles=../resources/jniconfig.json -H:ResourceConfigurationFiles=../resources/resourceconfig.json --allow-incomplete-classpath --verbose -H:IncludeResourceBundles=com/sun/javafx/scene/control/skin/resources/controls,com/sun/javafx/scene/control/skin/resources/controls-nt,com.sun.javafx.tk.quantum.QuantumMessagesBundle,com/sun/glass/ui/win/themes
           echo "build native image finished"
         shell: cmd
       - name: Edit binary resources on windows
