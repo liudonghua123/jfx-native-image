@@ -8,7 +8,7 @@ on:
       - 'master'
 
 env:
-  APP_NAME: jfx-simple
+  APP_NAME: jfx-native-image
 
 jobs:
   build-jar:

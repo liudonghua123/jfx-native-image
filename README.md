@@ -1,1 +1,1 @@
-# jfx-simple
+# jfx-native-image
